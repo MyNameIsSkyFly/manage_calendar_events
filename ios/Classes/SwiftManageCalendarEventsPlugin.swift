@@ -79,8 +79,8 @@ public class SwiftManageCalendarEventsPlugin: NSObject, FlutterPlugin {
             let isAllDay = arguments["isAllDay"] as! Bool
             let hasAlarm = arguments["hasAlarm"] as! Bool
             let url = arguments["url"] as? String
-            let reminder = arguments["reminder"] as? Reminder
-
+            let minutes = arguments["reminder"] as! Int64
+            let reminder = Reminder(minutes: Int64(self.minutesToSeconds(minutes: minutes)))
             var event = CalendarEvent(
                 eventId: eventId,
                 title: title,
@@ -304,19 +304,15 @@ public class SwiftManageCalendarEventsPlugin: NSObject, FlutterPlugin {
         ekEvent!.endDate = endDate
         ekEvent!.calendar = ekCalendar!
         ekEvent!.isAllDay = isAllDay
-
+        if reminder != nil {
+            ekEvent!.addAlarm(EKAlarm(relativeOffset: Double(reminder!.minutes)*(-1)))
+        }
         if(location != nil) {
             ekEvent!.location = location
         }
 
         if(url != nil) {
             ekEvent!.url = URL(string: url ?? "")
-        }
-
-
-        if(reminder != nil) {
-            let alarm = EKAlarm.init(absoluteDate: Date.init(timeInterval: 1800, since: Date (timeIntervalSince1970: Double(event.startDate) / 1000.0)))
-            ekEvent!.addAlarm(alarm)
         }
 
         do {

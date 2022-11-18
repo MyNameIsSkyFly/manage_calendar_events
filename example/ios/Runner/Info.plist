@@ -43,5 +43,7 @@
 	<false/>
     <key>NSCalendarsUsageDescription</key>
     <string>To add or edit calander events</string>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 </dict>
 </plist>
